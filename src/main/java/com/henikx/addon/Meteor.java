@@ -1,14 +1,9 @@
 package com.henikx.addon;
 
-import com.henikx.addon.commands.CommandExample;
-import com.henikx.addon.hud.HudExample;
-import com.henikx.addon.modules.InventoryTweaksPlus;
-import com.henikx.addon.modules.ModuleExample;
+import com.henikx.addon.modules.AutoDropPlus;
 import com.mojang.logging.LogUtils;
 import meteordevelopment.meteorclient.addons.GithubRepo;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
-import meteordevelopment.meteorclient.commands.Commands;
-import meteordevelopment.meteorclient.systems.hud.Hud;
 import meteordevelopment.meteorclient.systems.hud.HudGroup;
 import meteordevelopment.meteorclient.systems.modules.Category;
 import meteordevelopment.meteorclient.systems.modules.Modules;
@@ -24,13 +19,14 @@ public class Meteor extends MeteorAddon {
         LOG.info("Initializing Meteor Addon Template");
 
         // Modules
-        Modules.get().add(new ModuleExample());
+        Modules modules = Modules.get();
+        modules.add(new AutoDropPlus());
 
         // Commands
-        Commands.add(new CommandExample());
+        //Commands.add(new CommandExample());
 
         // HUD
-        Hud.get().register(HudExample.INFO);
+        //Hud.get().register(HudExample.INFO);
     }
 
     @Override
