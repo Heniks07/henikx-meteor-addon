@@ -55,7 +55,7 @@ public class AutoDropPlus extends Module{
         .build()
     );
 
-    private final Setting<Integer> amountToKeep = sgGeneral.add(new IntSetting.Builder()
+    private final Setting<Integer> stacksToKeep = sgGeneral.add(new IntSetting.Builder()
         .name("stacks-to-keep")
         .description("How many stacks of items to keep before throwing anny out")
         .defaultValue(4)
@@ -77,7 +77,8 @@ public class AutoDropPlus extends Module{
         super(Meteor.CATEGORY, "Auto Drop Plus", "A more advanced implementation of Auto Drop");
     }
 
-    private final Map<String, Float> currentItemCount = new HashMap<>();
+    //Float because it counts in stacks or slots not items to account for multiple items with different max stack counts
+    private final Map<String, Float> currentStackCount = new HashMap<>();
 
     @EventHandler
     private void onTickPost(TickEvent.Post event){
@@ -92,18 +93,18 @@ public class AutoDropPlus extends Module{
         // Initialize the value either way as 0
         if(countIndiviual.get()){
             for (Item item: autoDropItems.get()) {
-                currentItemCount.put(item.getName().toString(),0f);
+                currentStackCount.put(item.getName().toString(),0f);
             }
         }
         else {
-            currentItemCount.put("default", 0f);
+            currentStackCount.put("default", 0f);
         }
 
 
 
         //Count
         if (mc.player == null) return;
-        
+
         for (int i = (autoDropExcludeHotbar.get() && !countHotbarItems.get()) ? 9 : 0; i < mc.player.getInventory().size(); i++) {
             ItemStack itemStack = mc.player.getInventory().getStack(i);
 
@@ -112,11 +113,11 @@ public class AutoDropPlus extends Module{
 
                 // divide through the max count so when countIndividual is false and items with varying max stack counts are selected it still works
                 if(countIndiviual.get()){
-                    currentItemCount.put(itemStack.getName().toString(), currentItemCount.get(itemStack.getName().toString()) + itemStack.getCount() / itemStack.getMaxCount());
+                    currentStackCount.put(itemStack.getName().toString(), currentStackCount.get(itemStack.getName().toString()) + itemStack.getCount() / itemStack.getMaxCount());
                 }
                 else {
 
-                    currentItemCount.put("default", currentItemCount.get("default") + itemStack.getCount() / itemStack.getMaxCount());
+                    currentStackCount.put("default", currentStackCount.get("default") + itemStack.getCount() / itemStack.getMaxCount());
                 }
             }
         }
@@ -151,9 +152,10 @@ public class AutoDropPlus extends Module{
 
 
         if ((!autoDropOnlyFullStacks.get() || itemStack.getCount() == itemStack.getMaxCount()) &&
-            !SlotUtils.isArmor(i) && currentItemCount.get(key) - (float) itemStack.getCount() /itemStack.getMaxCount() >= amountToKeep.get())
+            !SlotUtils.isArmor(i) && currentStackCount.get(key) - (float) itemStack.getCount()/itemStack.getMaxCount() >= stacksToKeep.get())
         {
-            currentItemCount.put(key, currentItemCount.get(key)- itemStack.getCount());
+            currentStackCount.put(key, currentStackCount.get(key) - itemStack.getCount()/itemStack.getMaxCount());
+
             if(sellInstead.get())
                 ChatUtils.sendPlayerMsg("/sell " + itemStack.getItem().toString().replace("minecraft:","") + " " + itemStack.getMaxCount());
 
