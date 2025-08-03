@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
-  "id": "addon-template",
+  "id": "henikx-meteor",
   "version": "${version}",
-  "name": "Addon Template",
-  "description": "An addon template for Meteor Client addons.",
+  "name": "Henikx Meteor Addon",
+  "description": "An addon by henikx adding some quality of life features",
   "authors": [
-    "seasnail"
+    "henikx"
   ],
   "contact": {
-    "sources": "https://github.com/MeteorDevelopment/meteor-addon-template"
+    "sources": "https://github.com/Heniks07/henikx-meteor-addon"
   },
   "icon": "assets/template/icon.png",
   "environment": "client",
   "entrypoints": {
     "meteor": [
-      "com.example.addon.AddonTemplate"
+      "com.henikx.addon.Meteor"
     ]
   },
   "mixins": [
